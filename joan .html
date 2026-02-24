@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sign in - Surprise for Joan</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      background: #000000;
+      color: #fffacd;
+      font-family: system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      touch-action: manipulation; /* better touch response */
+    }
+
+    /* Login screen */
+    #login-screen {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      transition: opacity 0.8s ease;
+    }
+
+    #login-screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .win-logo {
+      font-size: 7rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 25px #ffd700;
+    }
+
+    .win-title {
+      font-size: 2.8rem;
+      color: #ffd700;
+      margin-bottom: 30px;
+      text-shadow: 0 0 15px #d4af37;
+    }
+
+    .password-box {
+      background: rgba(20,20,20,0.95);
+      border: 2px solid #d4af37;
+      border-radius: 16px;
+      padding: 40px 30px;
+      width: 90%;
+      max-width: 420px;
+      box-shadow: 0 0 50px rgba(212,175,55,0.4);
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 18px;
+      font-size: 1.5rem;
+      background: #111;
+      border: 1px solid #ffd700;
+      border-radius: 10px;
+      color: white;
+      text-align: center;
+      margin: 20px 0 15px;
+      outline: none;
+    }
+
+    input[type="password"]::placeholder {
+      color: #888;
+    }
+
+    .unlock-btn {
+      background: linear-gradient(90deg, #d4af37, #ffd700);
+      color: #000;
+      border: none;
+      padding: 16px 50px;
+      font-size: 1.4rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 0 20px #ffd700;
+      touch-action: manipulation;
+    }
+
+    .error-msg {
+      color: #ff6666;
+      font-size: 1.2rem;
+      margin-top: 12px;
+      min-height: 24px;
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+
+    /* Birthday content */
+    #birthday-content {
+      opacity: 0;
+      transform: scale(0.92);
+      transition: opacity 1.2s ease, transform 1.2s ease;
+      max-width: 94%;
+      padding: 40px 25px;
+      background: rgba(10,10,10,0.94);
+      border-radius: 24px;
+      border: 2px solid rgba(212,175,55,0.45);
+      box-shadow: 0 0 80px rgba(212,175,55,0.5);
+    }
+
+    #birthday-content.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    h1 {
+      font-size: clamp(3.8rem, 11vw, 6rem);
+      color: transparent;
+      background: linear-gradient(90deg, #ffd700, #fffacd, #d4af37);
+      -webkit-background-clip: text;
+      background-clip: text;
+      text-shadow: 0 0 30px #ffd700;
+      margin-bottom: 20px;
+      animation: glow 5s infinite alternate;
+    }
+
+    .name {
+      font-size: clamp(3.2rem, 10vw, 5.2rem);
+      color: #ffd700;
+      text-shadow: 0 0 40px #d4af37;
+    }
+
+    .cake {
+      font-size: clamp(7rem, 20vw, 10rem);
+      margin: 30px 0;
+      animation: float 8s infinite ease-in-out;
+      text-shadow: 0 0 25px #ffd700;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-40px); }
+    }
+
+    .message {
+      font-size: clamp(1.3rem, 4.8vw, 1.7rem);
+      line-height: 1.7;
+      color: #fffacd;
+      max-width: 800px;
+      margin: 0 auto 40px;
+    }
+
+    .accents {
+      font-size: 3.5rem;
+      color: #ffd700;
+      animation: pulse 4s infinite;
+    }
+
+    @keyframes pulse {
+      0%,100% { transform: scale(1); }
+      50%     { transform: scale(1.12); }
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 20px #d4af37, 0 0 45px #ffd700; }
+      to   { text-shadow: 0 0 45px #ffd700, 0 0 80px #d4af37; }
+    }
+
+    .float-gold {
+      position: absolute;
+      font-size: clamp(2.5rem, 7vw, 4rem);
+      color: rgba(255,215,0,0.9);
+      pointer-events: none;
+      animation: rise linear infinite;
+      text-shadow: 0 0 15px #d4af37;
+    }
+
+    @keyframes rise {
+      0%   { transform: translateY(120vh) rotate(0deg); opacity: 0.9; }
+      100% { transform: translateY(-30vh) rotate(2160deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Login Screen -->
+  <div id="login-screen">
+    <div class="win-logo">🔒</div>
+    <h1 class="win-title">Surprise Locked</h1>
+    <div class="password-box">
+      <div style="font-size: 1.6rem; margin-bottom: 20px; color: #ffd700;">Enter password to unlock</div>
+      <input type="password" id="password" placeholder="Password..." autofocus>
+      <button class="unlock-btn" onclick="checkPassword()">Unlock</button>
+      <div class="error-msg" id="error"></div>
+    </div>
+    <div style="margin-top: 30px; font-size: 1.2rem; color: #888;">Hint: her name (lowercase)</div>
+  </div>
+
+  <!-- Birthday Wish -->
+  <div id="birthday-content">
+    <div class="cake">🎂</div>
+    <h1>Happy Birthday!</h1>
+    <h2>To the legend <span class="name">Joan</span> 🎈</h2>
+
+    <div class="message">
+      Yo Joan!<br><br>
+      Happy Birthday to the friend who turns every boring moment into something hilarious.<br><br>
+      Thanks for the savage roasts, the 2 a.m. memes, the group chat chaos,<br>
+      and for always being down for whatever dumb plan we come up with.<br><br>
+      You're the one who makes hangouts legendary and keeps the vibes unmatched.<br>
+      Life is way more fun with you around.<br><br>
+      Here's to more bad ideas, more laughs, more stories we'll deny later,<br>
+      and another year of being the best kind of trouble.<br><br>
+      Have the wildest, best day ever — you deserve it! 🎉✨
+    </div>
+
+    <div class="accents">🎉 💫 ✨ 🎉 💫 ✨</div>
+  </div>
+
+  <!-- Music (plays after unlock + interaction) -->
+  <audio id="music" loop preload="none">
+    <source src="https://cdn.pixabay.com/audio/2023/08/07/audio_3d6d7d7e8f.mp3" type="audio/mp3">
+  </audio>
+
+  <script>
+    const passwordInput = document.getElementById('password');
+    const errorMsg = document.getElementById('error');
+    const loginScreen = document.getElementById('login-screen');
+    const birthdayContent = document.getElementById('birthday-content');
+    const audio = document.getElementById('music');
+    audio.volume = 0.35;
+
+    function checkPassword() {
+      const val = passwordInput.value.trim().toLowerCase();
+      if (val === 'joan') {
+        loginScreen.classList.add('hidden');
+        setTimeout(() => {
+          birthdayContent.classList.add('visible');
+          audio.play().catch(() => console.log("Audio needs another tap"));
+          startParticles();
+        }, 800);
+      } else {
+        errorMsg.textContent = "Nope! Try again 😏";
+        errorMsg.style.opacity = 1;
+        setTimeout(() => errorMsg.style.opacity = 0, 2500);
+        passwordInput.value = '';
+        passwordInput.focus();
+      }
+    }
+
+    // Enter key support
+    passwordInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') checkPassword();
+    });
+
+    // Light floating particles (mobile-optimized)
+    function createParticle() {
+      const p = document.createElement('div');
+      p.className = 'float-gold';
+      p.textContent = ['✨','💫','⭐','🎈','🌟'][Math.floor(Math.random()*5)];
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.animationDuration = (Math.random() * 8 + 10) + 's';
+      p.style.animationDelay = Math.random() * 5 + 's';
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 18000);
+    }
+
+    function startParticles() {
+      setInterval(createParticle, 900); // slower interval = less CPU use
+    }
+
+    // Extra tap anywhere can start music if blocked
+    document.addEventListener('touchstart', () => {
+      audio.play().catch(() => {});
+    }, { once: true });
+  </script>
+
+</body>
+</html>
